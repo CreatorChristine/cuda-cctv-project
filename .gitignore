@@ -1,0 +1,31 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+env/
+venv/
+cuda_env/
+# Jupyter
+.ipynb_checkpoints/
+
+# Data and models
+*.h5
+*.pkl
+*.pth
+data/raw/
+models/
+
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# CUDA
+*.ptx
+*.cubin

@@ -1,0 +1,11 @@
+﻿{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "nvidia.nsight-vscode-edition",
+        "ms-vscode.cpptools",
+        "ms-python.black-formatter",
+        "ms-python.pylint"
+    ]
+}
