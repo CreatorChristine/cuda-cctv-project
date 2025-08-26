@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/env python3
-"
-Main application file for CUDA Python project
-"
+# "
+# Main application file for CUDA Python project
+# "
 
 import numpy as np
 from utils.gpu_utils import check_gpu, simple_gpu_operation
