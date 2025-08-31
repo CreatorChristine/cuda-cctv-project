@@ -1,34 +1,48 @@
-﻿from numba import cuda
-import numpy as np
 import cupy as cp
-
-@cuda.jit
-def add_arrays_kernel(a, b, result):
-    "Basic CUDA kernel for array addition"
-    idx = cuda.grid(1)
-    if idx < a.size:
-        result[idx] = a[idx] + b[idx]
+import numpy as np
+import time
 
 def gpu_add_arrays(a, b):
-    "Wrapper function for GPU array addition using Numba"
-    # Allocate GPU memory
-    a_gpu = cuda.to_device(a)
-    b_gpu = cuda.to_device(b)
-    result_gpu = cuda.device_array_like(a)
-    
-    # Configure kernel launch
-    threads_per_block = 256
-    blocks_per_grid = (a.size + threads_per_block - 1) // threads_per_block
-    
-    # Launch kernel
-    add_arrays_kernel[blocks_per_grid, threads_per_block](a_gpu, b_gpu, result_gpu)
-    
-    # Copy result back to CPU
-    return result_gpu.copy_to_host()
-
-def cupy_add_arrays(a, b):
-    "Simple array addition using CuPy"
+    """GPU array addition using CuPy (no Numba needed)"""
     a_gpu = cp.asarray(a)
     b_gpu = cp.asarray(b)
     result = a_gpu + b_gpu
     return cp.asnumpy(result)
+
+def cupy_add_arrays(a, b):
+    """Same as gpu_add_arrays - keeping for compatibility"""
+    return gpu_add_arrays(a, b)
+
+def gpu_matrix_multiply(a, b):
+    """GPU matrix multiplication"""
+    a_gpu = cp.asarray(a)
+    b_gpu = cp.asarray(b)
+    result = cp.dot(a_gpu, b_gpu)
+    return cp.asnumpy(result)
+
+def gpu_timing_test():
+    """Test GPU performance with timing"""
+    print("GPU Performance Test:")
+    
+    # Large array operations
+    size = 1000000
+    a = np.random.randn(size).astype(np.float32)
+    b = np.random.randn(size).astype(np.float32)
+    
+    # GPU timing
+    start = time.time()
+    a_gpu = cp.asarray(a)
+    b_gpu = cp.asarray(b)
+    result_gpu = a_gpu + b_gpu
+    result = cp.asnumpy(result_gpu)
+    gpu_time = time.time() - start
+    
+    # CPU timing for comparison
+    start = time.time()
+    cpu_result = a + b
+    cpu_time = time.time() - start
+    
+    print(f"GPU time: {gpu_time*1000:.2f} ms")
+    print(f"CPU time: {cpu_time*1000:.2f} ms")
+    print(f"Speedup: {cpu_time/gpu_time:.2f}x")
+    print(f"Results match: {np.allclose(result, cpu_result)}")
